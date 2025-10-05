@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import '../envConfig'
+import '../envconfig'
 
 export default async function connect(){
     try {
