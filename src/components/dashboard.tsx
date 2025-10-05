@@ -33,8 +33,8 @@ export default function CartDashboard() {
       const data = await res.json();
       if (!res.ok || !data.success) throw new Error(data.error ?? "Failed to fetch");
       setItems(data.items ?? []);
-    } catch (e: any) {
-      setError(e.message ?? "Failed to fetch");
+    } catch (error) {
+      console.log(error);
     } finally {
       setLoading(false);
     }
@@ -78,8 +78,8 @@ export default function CartDashboard() {
       setItems(data.items ?? []); // server returns refreshed list
       setOpen(false);
       setForm({ productName: "", productPrice: "", productQuantity: "1", productDescription: "", productImage: "" });
-    } catch (e: any) {
-      alert(e.message ?? "Failed to create");
+    } catch (error) {
+      alert(error ?? "Failed to create");
     }
   };
 

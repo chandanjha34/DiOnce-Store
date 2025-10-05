@@ -9,8 +9,10 @@ export async function GET() {
     await connect();
     const items = await CartItem.find().sort({ createdAt: -1 }).lean();
     return NextResponse.json({ success: true, items }, { status: 200 });
-  } catch (err: any) {
-    return NextResponse.json({ success: false, error: err.message ?? "Server error" }, { status: 500 });
+  } catch (error) {
+    if (error instanceof Error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
   }
 }
 
@@ -50,10 +52,9 @@ export async function POST(req: Request) {
       { success: true, item, items },
       { status: 201 }
     );
-  } catch (err: any) {
-    return NextResponse.json(
-      { success: false, error: err.message ?? "Server error" },
-      { status: 500 }
-    );
+  } catch (error) {
+    if (error instanceof Error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
   }
 }
