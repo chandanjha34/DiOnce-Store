@@ -57,8 +57,8 @@ const LoginForm = () => {
           {isSignup && (
             <input
               type="text"
-              name="name"
-              placeholder="Full Name"
+              name="username"
+              placeholder="Username"
               className="p-3 rounded-lg bg-white/20 focus:bg-white/30 outline-none text-white placeholder-white/70"
               required
             />
