@@ -18,7 +18,7 @@ const LoginForm = () => {
     const formData = new FormData(e.currentTarget);
     const payload = Object.fromEntries(formData.entries());
     const endpoint = isSignup ? "/api/auth/signup" : "/api/auth/login";
-
+    console.log(endpoint);
     try {
       const res = await fetch(endpoint, {
         method: "POST",
@@ -27,11 +27,11 @@ const LoginForm = () => {
         },
         body: JSON.stringify(payload),
       });
-
+      console.log(res);
       const data = await res.json();
       console.log(data);
       if (data.success) {
-        dispatch(assignUsername(data.username));        
+        dispatch(assignUsername(isSignup?data.newUser.username:data.tokenData.username));        
         alert(isSignup ? "✅ Signup successful! You can now log in." : "✅ Login successful!");
         router.push('/')
       } else {

@@ -2,6 +2,10 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { RootState,AppDispatch } from "@/Redux/store";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { assignSignal } from "@/Redux/features/signal";
 
 type CartItem = {
   _id: string;
@@ -18,7 +22,9 @@ export default function CartDashboard() {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
+  const user = useSelector((state: RootState) => state.username.value);
+  const signal = useSelector((state: RootState) => state.signal.value);
+  const dispatch = useDispatch<AppDispatch>();
   // Derived total
   const total = useMemo(
     () => items.reduce((sum, it) => sum + it.productPrice * (it.productQuantity ?? 1), 0),
@@ -31,8 +37,10 @@ export default function CartDashboard() {
     try {
       const res = await fetch("/api/cart/addItem", { cache: "no-store" });
       const data = await res.json();
+      assignSignal('false');
       if (!res.ok || !data.success) throw new Error(data.error ?? "Failed to fetch");
       setItems(data.items ?? []);
+
     } catch (error) {
       console.log(error);
     } finally {
@@ -57,6 +65,43 @@ export default function CartDashboard() {
     const { name, value } = e.target;
     setForm((s) => ({ ...s, [name]: value }));
   };
+
+  // Inside CartDashboard
+
+    const handleAddToCart = async (item: CartItem) => {
+      try {
+        const username = user; // Replace later with Redux user
+        console.log(username)
+        const payload = {
+          username,
+          cartDetails: {
+            productName: item.productName,
+            productDescription: item.productDescription,
+            productPrice: item.productPrice,
+            productQuantity: item.productQuantity ?? 1,
+            productImage: item.productImage,
+          },
+        };
+        console.log(payload)
+        const res = await fetch("/api/cart/addItemtoCart", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+
+    const data = await res.json();
+    console.log(data);
+    if (!res.ok || !data.success) throw new Error(data.error ?? "Failed to add item to cart");
+    dispatch(assignSignal('k'));
+    alert("✅ Item added to cart successfully!");
+
+  } catch (err) {
+    console.error(err);
+    alert("❌ Failed to add to cart");
+  }
+};
+
+
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -118,7 +163,12 @@ export default function CartDashboard() {
                     )}
                     <div className="mt-2 font-semibold flex justify-between">
                         ${it.productPrice.toFixed(2)}
-                        <button className="border border-black border-[1px] rounded-lg p-1 active:p-0 hover:bg-[#696969]">Add to Cart</button>
+                       <button
+                          onClick={() => handleAddToCart(it)}
+                          className="border border-black rounded-lg p-1 hover:bg-gray-700 text-white"
+                        >
+                          Add to Cart
+                        </button>
                     </div>
                   </div>
                 </div>

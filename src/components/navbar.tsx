@@ -18,11 +18,20 @@ const Navbar = () => {
     route.push("/signup");
   };
 
+  const handleCart = ()=>{
+    route.push("/cart");
+  }
+
+  const handleDashboard =()=>{
+    route.push('/')
+  }
+
   return (
     <div className="sticky top-0 z-40 w-full backdrop-blur supports-[backdrop-filter]:bg-white/70 bg-white shadow-sm">
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3">
         {/* Left - Logo */}
         <div
+        onClick={handleDashboard} 
           className={`${montserrat.className} text-xl font-bold tracking-wide text-gray-900 select-none`}
           title="DiOnce Store"
         >
@@ -46,6 +55,7 @@ const Navbar = () => {
           <button className="text-sm text-gray-700 transition hover:text-gray-900">Category</button>
 
           <button
+          onClick={handleCart}
             className="relative grid h-9 w-9 place-items-center rounded-full border border-gray-200 bg-white text-gray-700 transition hover:border-gray-300 hover:bg-gray-50"
             aria-label="Open cart"
           >

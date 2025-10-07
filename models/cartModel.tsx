@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import CartItemSchema from "./cartItemModel";
 
 const CartSchema = new mongoose.Schema(
   {
@@ -8,24 +7,14 @@ const CartSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    items: {
-      type: [CartItemSchema], // imported from separate file
-      default: [],
-    },
-    totalAmount: {
-      type: Number,
-      default: 0,
-    },
+    items: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "CartItem", // ✅ reference by name, not import
+      },
+    ],
   },
   { timestamps: true }
 );
 
-// 🧮 Automatically calculate total before saving
-
-if (mongoose.models.Cart) {
-  delete mongoose.models.Cart;
-}
-
-const Cart =mongoose.model("Cart", CartSchema)
-
-export default Cart;
+export default mongoose.models.Cart || mongoose.model("Cart", CartSchema);
