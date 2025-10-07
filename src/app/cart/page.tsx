@@ -42,9 +42,8 @@ const CartPage = () => {
         if (!res.ok || !data.success) throw new Error(data.error || "Failed to fetch cart");
 
         setCart(data.cart);
-      } catch (err: any) {
-        console.error(err);
-        setError(err.message);
+      } catch (error) {
+        console.error(error);
       } finally {
         setLoading(false);
       }
